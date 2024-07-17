@@ -1,5 +1,4 @@
 package com.techie_planet.data.dtos;
-
 import jakarta.persistence.Entity;
 import lombok.Data;
 

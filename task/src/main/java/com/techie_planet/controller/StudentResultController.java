@@ -47,6 +47,7 @@ public class StudentResultController {
     }
 
 
+    
     @GetMapping("/reports")
     public ResponseEntity<List<StudentsReport>> getStudentReports() {
         try {

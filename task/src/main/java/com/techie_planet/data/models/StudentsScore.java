@@ -14,13 +14,12 @@ public class StudentsScore {
     private Double score;
 
     @ManyToOne
-//    @JoinColumn(name = "student_id")
+    @JoinColumn(name = "student_id")
     @JsonBackReference
     private Students student;
 
     @Override
     public String toString() {
-        // Avoid calling student.toString()
         return "StudentScore{" +
                 "id=" + id +
                 ", score=" + score +

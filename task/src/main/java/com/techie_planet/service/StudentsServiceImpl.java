@@ -5,6 +5,7 @@ import com.techie_planet.data.dtos.StudentScoreDto;
 import com.techie_planet.data.models.Students;
 import com.techie_planet.data.models.StudentsReport;
 import com.techie_planet.data.models.StudentsScore;
+import com.techie_planet.data.models.Subjects;
 import com.techie_planet.data.repositories.StudentsRepo;
 import com.techie_planet.data.repositories.StudentsScoreRepo;
 import org.modelmapper.ModelMapper;
@@ -38,8 +39,6 @@ public class StudentsServiceImpl implements StudentsService{
     public StudentsScore createScore(StudentScoreDto studentScoreDto) {
         try {
             Students student = studentRepo.findById(studentScoreDto.getStudentId()).orElseThrow(() ->
-
-
                     new RuntimeException("student is not in our database"));
             System.out.println(student);
 
@@ -47,20 +46,23 @@ public class StudentsServiceImpl implements StudentsService{
             ModelMapper modelMapper = new ModelMapper();
 
             // Create a new StudentsScore object
-            StudentsScore studentScore = new StudentsScore();
+            StudentsScore studentScore = modelMapper.map(studentScoreDto, StudentsScore.class);
+            studentScore.setSubjectName(Subjects.valueOf(studentScoreDto.getSubjectName().toUpperCase()));
+
+           StudentsScore newScore = studentScoreRepo.save(studentScore);
 
             // Use ModelMapper to map properties from studentScoreDto to studentScore
-            modelMapper.map(studentScoreDto, studentScore);
+
             // Set the student explicitly (ModelMapper might not handle circular references)
             studentScore.setStudent(student);
 
             // Add the studentScore to the student's subjectScores
-            student.getSubjectScores().add(studentScore);
+            student.getSubjectScores().add(newScore);
 
             // Save both student and studentScore
             studentRepo.save(student);
 
-            return studentScore;
+            return newScore;
 
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
