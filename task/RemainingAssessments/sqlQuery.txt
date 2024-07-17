@@ -1,0 +1,87 @@
+--Question 1:
+--Given the following data definition, select all queries that return the second largest salary.
+--Note that some employees may have the same salary. Please note that there may be more than one
+--correct option.
+
+
+SELECT MAX(salary) FROM emp WHERE salary < (SELECT MAX(salary) FROM emp);
+SELECT salary FROM (SELECT DISTINCT salary FROM emp ORDER BY salary DESC LIMIT 2) AS emp ORDER BY salary LIMIT 1;
+
+
+
+--Question 2:
+--Select the country where the games took place each year.
+
+
+
+SELECT games.yr, games.city, city.country
+FROM games
+JOIN city ON games.city = city.name;
+
+
+
+
+
+--Question 3:
+--Using the table below, explain how SQL LEFT and RIGHT JOIN statements function in queries.
+
+--LEFT JOIN:
+The LEFT JOIN keyword returns all records from the left table (in this case, games),
+and the matched records from the right table (city). The result is NULL from the right
+side if there is no match.
+
+--QUERY:
+
+SELECT games.yr, games.city, city.name, city.country
+FROM games
+LEFT JOIN city ON games.city = city.name;
+
+--EXPLANATION:
+
+SELECT games.yr, games.city, city.name, city.country: Selects the year and city from the games table, and the name and country from the city table.
+FROM games: Specifies the games table.
+
+LEFT JOIN city: Performs a LEFT JOIN with the city table.
+ON games.city = city.name: Joins the tables on the condition that the city in the games table matches the name in the city table.
+
+The LEFT JOIN ensures that all records from the games table are included, and the name and
+country columns from the city table are included where there is a matching city name. For any
+game city that does not have a match in the city table, the name and country columns will show NULL.
+
+
+--RIGHT JOIN
+
+The RIGHT JOIN keyword returns all records from the right table (city), and the matched records from
+the left table (games). The result is NULL from the left side when there is no match.
+
+--QUERY:
+
+SELECT games.yr, games.city, city.name, city.country
+FROM games
+RIGHT JOIN city ON games.city = city.name;
+
+--EXPLANATION:
+
+SELECT games.yr, games.city, city.name, city.country: Selects the year and city from the games table,
+and the name and country from the city table.
+FROM games: Specifies the games table.
+RIGHT JOIN city: Performs a RIGHT JOIN with the city table.
+ON games.city = city.name: Joins the tables on the condition that the city in the games table matches the name in the city table.
+
+The RIGHT JOIN ensures that all records from the city table are included, and the yr and city
+columns from the games table are included where there is a matching city name. For any city
+that does not have a match in the games table, the yr and city columns will show NULL.
+
+
+
+
+
+
+--QUESTION 4:
+--Write a query that selects userId and the average session duration for each user with more than one session.
+
+
+SELECT userId, AVG(duration) AS AverageDuration
+FROM sessions
+GROUP BY userId
+HAVING COUNT(id) > 1;
